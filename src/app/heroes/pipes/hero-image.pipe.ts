@@ -9,6 +9,7 @@ export class HeroImagePipe implements PipeTransform {
 
   // Cargar la imagen que tiene, si no, cargar la de por defecto
   transform(hero: Hero): string {
+
     if ( !hero.id && !hero.alt_img) {
       return 'assets/no-image.png'
     }
