@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { Hero, Publisher } from '../../interfaces/hero.interface';
-import { __values } from 'tslib';
 import { HeroesService } from '../../services/heroes.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-new-page',
   templateUrl: './new-page.component.html',
   styles: ``
 })
-export class NewPageComponent {
+export class NewPageComponent implements OnInit{
 
   // Formulario Reactivo
   public heroForm = new FormGroup({
@@ -27,11 +29,33 @@ export class NewPageComponent {
     {id: 'Marvel Comics', desc: 'Marvel - Comics'},
   ];
 
-  constructor( private heroesService: HeroesService) {}
+  constructor(
+    private heroesService: HeroesService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
 
   get currentHero():Hero {
     const hero = this.heroForm.value as Hero;
     return hero;
+  }
+
+  // Obtener los valores originales si quiero editar
+  ngOnInit(): void {
+
+    if ( !this.router.url.includes('edit') ) return;
+
+    this.activatedRoute.params
+      .pipe(
+        switchMap( ({id}) => this.heroesService.getHeroById( id )),
+      ).subscribe( hero => {
+
+        if ( !hero ) return this.router.navigateByUrl('/');
+
+        this.heroForm.reset( hero );
+        return;
+      })
+
   }
 
   onSubmit():void {
