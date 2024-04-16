@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Hero, Publisher } from '../../interfaces/hero.interface';
 import { HeroesService } from '../../services/heroes.service';
-import { switchMap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
+
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-new-page',
@@ -35,6 +39,7 @@ export class NewPageComponent implements OnInit{
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private snackbar: MatSnackBar,
+    private dialog: MatDialog,
   ) {}
 
   get currentHero():Hero {
@@ -61,6 +66,7 @@ export class NewPageComponent implements OnInit{
 
   }
 
+  // Realizo la función dependiendo del botón seleccionado
   onSubmit():void {
 
     if( this.heroForm.invalid ) return;
@@ -85,6 +91,41 @@ export class NewPageComponent implements OnInit{
 
       })
 
+  }
+
+  // Recibo la función de eliminar
+  onDeleteHero() {
+    if ( !this.currentHero.id ) throw Error('Hero id is required')
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: this.heroForm.value,
+      });
+
+      // Obtengo el resultado del dialog
+      dialogRef.afterClosed()
+        .pipe(
+          // Compruebo que ha devuelto true el botón
+          filter( (result:boolean) => result ),
+          switchMap( () =>  this.heroesService.deleteHeroById( this.currentHero.id )),
+          // Compruebo que ha podido eliminar el heroe
+          filter( (wasDeleted: boolean)=> wasDeleted),
+        )
+        .subscribe(() => {
+          this.router.navigate(['/heroes']);
+      })
+
+
+      // dialogRef.afterClosed().subscribe(result => {
+      //   if ( !result ) return;
+      //   console.log('deleted')
+
+      //   this.heroesService.deleteHeroById( this.currentHero.id )
+      //     .subscribe( wasDeleted => {
+      //       if ( wasDeleted )
+      //         this.router.navigate(['/heroes']);
+      //     });
+
+      // });
   }
 
   // Mensaje que sale cuando guardas
