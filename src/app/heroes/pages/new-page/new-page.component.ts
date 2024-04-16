@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Hero, Publisher } from '../../interfaces/hero.interface';
 import { HeroesService } from '../../services/heroes.service';
@@ -32,7 +33,8 @@ export class NewPageComponent implements OnInit{
   constructor(
     private heroesService: HeroesService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackbar: MatSnackBar,
   ) {}
 
   get currentHero():Hero {
@@ -52,6 +54,7 @@ export class NewPageComponent implements OnInit{
 
         if ( !hero ) return this.router.navigateByUrl('/');
 
+        // Establezo los valores antiguos
         this.heroForm.reset( hero );
         return;
       })
@@ -66,7 +69,8 @@ export class NewPageComponent implements OnInit{
     if ( this.currentHero.id ) {
       this.heroesService.updateHero(this.currentHero)
         .subscribe( hero => {
-          // TODO: mostrar snackbar
+          // Muestro el mensaje de actualizado
+          this.showSnackbar(`${ hero.superhero } updated!`);
         });
 
         return;
@@ -75,11 +79,19 @@ export class NewPageComponent implements OnInit{
     // Voy a crear
     this.heroesService.addHero(this.currentHero)
       .subscribe( hero => {
-        // TODO: mostrar snackbar, y navegar a /heroes/edit/hero.id
+        this.router.navigate(['/heroes/edit', hero.id]);
+        // Muestro el mensaje de creado
+        this.showSnackbar(`${ hero.superhero } created!`);
 
       })
 
+  }
 
+  // Mensaje que sale cuando guardas
+  showSnackbar( message: string):void {
+    this.snackbar.open( message, 'done', {
+      duration: 2500,
+    })
   }
 
 
