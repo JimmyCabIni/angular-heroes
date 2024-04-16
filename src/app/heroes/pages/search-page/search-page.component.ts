@@ -25,7 +25,7 @@ export class SearchPageComponent {
       .subscribe( heroes => this.heroes = heroes );
   }
 
-
+  // Establezo el hero seleccionado con la llamada del evento
   onSelectedOption( event: MatAutocompleteSelectedEvent ): void{
     if ( !event.option.value ) {
       this.selectedHero = undefined;
