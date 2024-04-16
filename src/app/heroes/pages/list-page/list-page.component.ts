@@ -13,6 +13,7 @@ export class ListPageComponent implements OnInit{
 
   constructor( private heroesService: HeroesService) {}
 
+  // Obtener todos los heroes
   ngOnInit(): void {
     this.heroesService.getHeroes()
       .subscribe( heroes => this.heroes = heroes );
