@@ -17,6 +17,7 @@ export class AuthService {
     return structuredClone( this.user );
   }
 
+  // Guardo en el localStorage al usuario
   login(email:string, password: string):Observable<User> {
 
     // http.post('login', {email, password});
@@ -28,6 +29,7 @@ export class AuthService {
       );
   }
 
+  // Compruebo que en el localStorage se encuentra al usuario
   checkAuthentication(): Observable<boolean> {
 
     if ( !localStorage.getItem('token') ) return of(false);
@@ -42,6 +44,7 @@ export class AuthService {
       );
   }
 
+  // Quito al usuario del LocalStorage
   logout() {
     this.user = undefined;
     localStorage.clear();
