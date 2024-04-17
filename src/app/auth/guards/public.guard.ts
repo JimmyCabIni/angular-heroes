@@ -17,7 +17,7 @@ export class PublicGuard implements CanMatch, CanActivate{
         tap( isAuthenticated => console.log('Authenticated:', isAuthenticated ) ),
         tap( isAuthenticated =>  {
           if ( isAuthenticated ) {
-            !this.router.navigate(['./'])
+            this.router.navigate(['./'])
           }
         }),
         map( isAuthenticated => !isAuthenticated)
