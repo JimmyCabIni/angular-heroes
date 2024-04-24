@@ -20,7 +20,7 @@ export class NewPageComponent implements OnInit{
 
   // Formulario Reactivo
   public heroForm = new FormGroup({
-    id:               new FormControl<string>(''),
+    _id:               new FormControl<string>(''),
     superhero:        new FormControl<string>('', { nonNullable: true }),
     publisher:        new FormControl<Publisher>(Publisher.DCComics || Publisher.MarvelComics),
     alter_ego:        new FormControl(''),
@@ -30,8 +30,8 @@ export class NewPageComponent implements OnInit{
   });
 
   public publishers = [
-    {id: 'DC Comics', desc: 'DC - Comics'},
-    {id: 'Marvel Comics', desc: 'Marvel - Comics'},
+    {_id: 'DC Comics', desc: 'DC - Comics'},
+    {_id: 'Marvel Comics', desc: 'Marvel - Comics'},
   ];
 
   constructor(
@@ -54,7 +54,7 @@ export class NewPageComponent implements OnInit{
 
     this.activatedRoute.params
       .pipe(
-        switchMap( ({id}) => this.heroesService.getHeroById( id )),
+        switchMap( ({_id}) => this.heroesService.getHeroById( _id )),
       ).subscribe( hero => {
 
         if ( !hero ) return this.router.navigateByUrl('/');
@@ -72,7 +72,7 @@ export class NewPageComponent implements OnInit{
     if( this.heroForm.invalid ) return;
 
     // Voy a editar
-    if ( this.currentHero.id ) {
+    if ( this.currentHero._id ) {
       this.heroesService.updateHero(this.currentHero)
         .subscribe( hero => {
           // Muestro el mensaje de actualizado
@@ -85,7 +85,7 @@ export class NewPageComponent implements OnInit{
     // Voy a crear
     this.heroesService.addHero(this.currentHero)
       .subscribe( hero => {
-        this.router.navigate(['/heroes/edit', hero.id]);
+        this.router.navigate(['/heroes/edit', hero._id]);
         // Muestro el mensaje de creado
         this.showSnackbar(`${ hero.superhero } created!`);
 
@@ -95,7 +95,7 @@ export class NewPageComponent implements OnInit{
 
   // Recibo la función de eliminar
   onDeleteHero() {
-    if ( !this.currentHero.id ) throw Error('Hero id is required')
+    if ( !this.currentHero._id ) throw Error('Hero id is required')
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: this.heroForm.value,
@@ -106,7 +106,7 @@ export class NewPageComponent implements OnInit{
         .pipe(
           // Compruebo que ha devuelto true el botón
           filter( (result:boolean) => result ),
-          switchMap( () =>  this.heroesService.deleteHeroById( this.currentHero.id )),
+          switchMap( () =>  this.heroesService.deleteHeroById( this.currentHero._id )),
           // Compruebo que ha podido eliminar el heroe
           filter( (wasDeleted: boolean)=> wasDeleted),
         )

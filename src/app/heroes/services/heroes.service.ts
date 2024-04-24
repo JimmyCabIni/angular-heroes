@@ -7,7 +7,7 @@ import { environments } from '../../../environments/environments';
 @Injectable({providedIn: 'root'})
 export class HeroesService {
 
-  private baseUrl: string = environments.baseUrl;
+  private baseUrl: string = environments.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -39,9 +39,9 @@ export class HeroesService {
   }
 
   updateHero( hero: Hero ): Observable<Hero> {
-    if ( !hero.id ) throw Error('Hero is required');
+    if ( !hero._id ) throw Error('Hero is required');
 
-    return this.http.patch<Hero>(`${this.baseUrl}/heroes/${ hero.id }`,hero);
+    return this.http.patch<Hero>(`${this.baseUrl}/heroes/${ hero._id }`,hero);
   }
 
   deleteHeroById( id: string ): Observable<boolean> {

@@ -27,7 +27,7 @@
     <button mat-button
       mat-raised
       color="primary"
-      [routerLink]="['/heroes/edit', hero.id]">
+      [routerLink]="['/heroes/edit', hero._id]">
       <mat-icon>edit</mat-icon>
       Editar
     </button>
@@ -36,7 +36,7 @@
 
     <button mat-button
       mat-raised
-      [routerLink]="['/heroes', hero.id]">
+      [routerLink]="['/heroes', hero._id]">
       <mat-icon>more_horiz</mat-icon>
       Más
     </button>
