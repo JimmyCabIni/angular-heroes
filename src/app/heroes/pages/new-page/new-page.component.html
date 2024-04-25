@@ -1,7 +1,7 @@
 <h1>
-  {{ currentHero._id ? 'Editar' : 'Agregar' }}
+  {{ currentHero.id ? 'Editar' : 'Agregar' }}
   Héroe
-  <small *ngIf="currentHero._id">{{ currentHero.superhero }}</small>
+  <small *ngIf="currentHero.id">{{ currentHero.superhero }}</small>
 </h1>
 
 <mat-divider class="mb-2"></mat-divider>
@@ -61,7 +61,7 @@
               required
             >
               <mat-option *ngFor="let publisher of publishers"
-                [value]="publisher._id">
+                [value]="publisher.id">
                 {{ publisher.desc }}
               </mat-option>
             </mat-select>
@@ -82,7 +82,7 @@
 
         <div class="flex justify-content-between">
           <button
-            *ngIf="currentHero._id"
+            *ngIf="currentHero.id"
             mat-flat-button
             color="warn"
             (click)="onDeleteHero()"

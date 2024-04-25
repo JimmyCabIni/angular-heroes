@@ -2,7 +2,7 @@
 
 
 export interface Hero {
-  _id:               string;
+  id:               string;
   superhero:        string;
   publisher:        Publisher;
   alter_ego:        string;
